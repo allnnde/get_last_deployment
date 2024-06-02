@@ -26,3 +26,7 @@ outputs:
 runs:
   using: node20
   main: action/index.js
+
+branding:
+  color: red
+  icon: aperture
