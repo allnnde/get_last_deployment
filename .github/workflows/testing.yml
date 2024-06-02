@@ -22,6 +22,6 @@ jobs:
       - name: Get latest deployment
         uses: ./
         with:
-          enviroment: testing
+          environment: testing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
