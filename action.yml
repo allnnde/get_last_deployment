@@ -1,0 +1,23 @@
+name: Get Last Deployment
+description: Get last deployment
+author: Giao Ho
+inputs:
+  owner:
+    # Default: Current owner
+    description: The name of the owner of the repo. Used to identify the owner of the repository.
+    required: false
+  repo:
+    # Default: Current repository
+    description: The name of the repository. Used to identify the repository on which to deployment.
+    required: false
+  environment:
+    description: The name of enviroment.
+    required: true
+
+outputs:
+  deployment_id:
+    description: The ID of the deployment
+    
+runs:
+  using: node20
+  main: action/index.js

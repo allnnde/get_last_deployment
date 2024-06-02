@@ -1,0 +1,19 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Latest Testing
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get latest deployment
+        uses: ./
+        with:
+          enviroment: testing
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
