@@ -2,7 +2,17 @@ import * as core from "@actions/core";
 import { context } from "@actions/github";
 import { Inputs, Outputs } from "./constants";
 
+type DeploymentState =
+  | 'error'
+  | 'failure'
+  | 'inactive'
+  | 'in_progress'
+  | 'queued'
+  | 'pending'
+  | 'success'
+
 export interface DeploymentInputs {
+  state: DeploymentState;
   environment: string;
   owner: string;
   repo: string;
@@ -14,14 +24,15 @@ export function getInputs(): DeploymentInputs {
   const result: DeploymentInputs = {
     owner: "",
     repo: "",
-    environment:""
+    environment:"",
+    state: 'pending'
   };
 
-  result.owner = core.getInput(Inputs.Owner, { required: false });
-  if (!result.owner) result.owner = context.repo.owner;
+  result.owner = core.getInput(Inputs.Owner, { required: false }) || context.repo.owner;
 
-  result.repo = core.getInput(Inputs.Repo, { required: false });
-  if (!result.repo) result.repo = context.repo.repo;
+  result.repo = core.getInput(Inputs.Repo, { required: false }) || context.repo.repo;
+
+  result.state = core.getInput(Inputs.State, { required: false }) as  DeploymentState || 'pending';
 
   result.environment = core.getInput(Inputs.Environment, { required: true });
 

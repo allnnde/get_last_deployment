@@ -7,20 +7,12 @@ export function isSuccessStatusCode(statusCode?: number): boolean {
   return statusCode >= 200 && statusCode < 300;
 }
 
-export function findLatestDeployment(deployments: any[]): any {
-  core.info(JSON.stringify(deployments))
-  const result = deployments[0];
-  return result;
-}
-
 (async function run() {
   try {
     const inputs: DeploymentInputs = getInputs();
     const github = getOctokit(process.env.GITHUB_TOKEN as string);
 
-    core.info(
-      `Start get deployment with:\n  owner: ${inputs.owner}\n  repo: ${inputs.repo}`,
-    );
+    core.info(`Start get deployment for ${inputs.owner}/${inputs.repo}}`);
 
     const deployments = await github.rest.repos.listDeployments({
       owner: inputs.owner,
@@ -29,18 +21,44 @@ export function findLatestDeployment(deployments: any[]): any {
     });
 
     if (isSuccessStatusCode(deployments.status)) {
-      const deploymentsActives = deployments.data;
+      const allDeployments = deployments.data;
+      core.info(`Finded a ${allDeployments.length} deployment for: ${inputs.owner}/${inputs.repo}`);
+      let latestDeployment = null;
+      const deploymentSorted = allDeployments.toSorted((a, b) => {
+        return (
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        );
+      });
 
-      const latestDeployment = findLatestDeployment(deploymentsActives);
+      for (const deployment of deploymentSorted) {
+        const deploymentStatuses =
+          await github.rest.repos.listDeploymentStatuses({
+            deployment_id: deployment.id,
+            owner: inputs.owner,
+            repo: inputs.repo,
+          });
+
+        const statusSorted = deploymentStatuses.data.toSorted((a, b) => {
+          return (
+            new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          );
+        });
+        if (statusSorted && statusSorted.length > 0) {
+          const lastStatus = statusSorted[0];
+          if (lastStatus.state == inputs.state) {
+            latestDeployment = deployment;
+            break;
+          }
+        }
+      }
+
       if (latestDeployment) {
         setOutputs(latestDeployment);
-      }else{
+      } else {
         core.warning("Not found deployments");
       }
     } else
-      throw new Error(
-        `Unexpected http ${deployments.status} during get deployments list`,
-      );
+      throw new Error(`Unexpected http ${deployments.status} during get deployments list`);
 
     core.info("Get deployment has finished successfully");
   } catch (err: any) {
