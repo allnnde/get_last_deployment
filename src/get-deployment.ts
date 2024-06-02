@@ -31,7 +31,11 @@ export function findLatestDeployment(deployments: any[]): any {
       const deploymentsActives = deployments.data;
 
       const latestDeployment = findLatestDeployment(deploymentsActives);
-      if (latestDeployment) setOutputs(latestDeployment);
+      if (latestDeployment) {
+        setOutputs(latestDeployment);
+      }else{
+        core.warning("Not found deployments");
+      }
     } else
       throw new Error(
         `Unexpected http ${deployments.status} during get deployments list`,

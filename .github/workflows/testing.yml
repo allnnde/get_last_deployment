@@ -8,9 +8,17 @@ on:
 
 jobs:
   test:
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: chrnorm/deployment-action@v2
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          environment: testing
+
       - name: Get latest deployment
         uses: ./
         with:

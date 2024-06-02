@@ -4,7 +4,7 @@
   "description": "GitHub Action to get last deployment.",
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.json",
-    "release": "ncc build src/get-deployment.ts -o action && git add -f action/",
+    "release": "ncc build src/get-deployment.ts -o action",
     "clean": "rimraf -- action",
     "lint": "eslint **/*.ts"
   },

@@ -30,5 +30,7 @@ export function getInputs(): DeploymentInputs {
 
 export function setOutputs(response: any) {
   // Get the outputs for the created deployment from the response
+    core.info(`set deployment id ${response.id}`);
     core.setOutput(Outputs.DeploymentId, response.id);
+
 }

@@ -28994,8 +28994,12 @@ exports.findLatestDeployment = findLatestDeployment;
             if (isSuccessStatusCode(deployments.status)) {
                 const deploymentsActives = deployments.data;
                 const latestDeployment = findLatestDeployment(deploymentsActives);
-                if (latestDeployment)
+                if (latestDeployment) {
                     (0, io_helper_1.setOutputs)(latestDeployment);
+                }
+                else {
+                    core.warning("Not found deployments");
+                }
             }
             else
                 throw new Error(`Unexpected http ${deployments.status} during get deployments list`);
@@ -29060,6 +29064,7 @@ function getInputs() {
 }
 exports.getInputs = getInputs;
 function setOutputs(response) {
+    core.info(`set deployment id ${response.id}`);
     core.setOutput(constants_1.Outputs.DeploymentId, response.id);
 }
 exports.setOutputs = setOutputs;
