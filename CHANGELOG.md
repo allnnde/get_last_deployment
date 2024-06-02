@@ -1,4 +1,13 @@
-# 0.1.0 (2024-06-02)
+## [0.1.1](https://github.com/allnnde/get_last_deployment/compare/v0.1.0...v0.1.1) (2024-06-02)
+
+
+### Bug Fixes
+
+* add data for marcket ([3bd02db](https://github.com/allnnde/get_last_deployment/commit/3bd02dbeec8c1319d5a115e533a3dd5b504bdac9))
+
+
+
+# [0.1.0](https://github.com/allnnde/get_last_deployment/compare/5feb84172dbc42975bdbe07a6ad2073b99fdfa85...v0.1.0) (2024-06-02)
 
 
 ### Bug Fixes
