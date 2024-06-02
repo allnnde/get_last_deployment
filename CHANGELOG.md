@@ -1,3 +1,12 @@
+## [0.1.3](https://github.com/allnnde/get_last_deployment/compare/v0.1.2...v0.1.3) (2024-06-02)
+
+
+### Bug Fixes
+
+* test ([5cfe794](https://github.com/allnnde/get_last_deployment/commit/5cfe794336b4aadc2e849ce28088b3272334e3ee))
+
+
+
 ## [0.1.2](https://github.com/allnnde/get_last_deployment/compare/v0.1.1...v0.1.2) (2024-06-02)
 
 
