@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/allnnde/get_last_deployment/compare/v0.1.3...v0.2.0) (2024-06-02)
+
+
+### Features
+
+* add readmin ([813229d](https://github.com/allnnde/get_last_deployment/commit/813229d0ce10e13cb752f2b97e25b9bb98aaf31d))
+
+
+
 ## [0.1.3](https://github.com/allnnde/get_last_deployment/compare/v0.1.2...v0.1.3) (2024-06-02)
 
 
