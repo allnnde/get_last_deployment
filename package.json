@@ -1,6 +1,6 @@
 {
   "name": "get-last-deployment",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "GitHub Action to get last deployment.",
   "scripts": {
     "build": "npm run clean && tsc --project tsconfig.json",
