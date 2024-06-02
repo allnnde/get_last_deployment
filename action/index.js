@@ -28976,6 +28976,7 @@ function isSuccessStatusCode(statusCode) {
 }
 exports.isSuccessStatusCode = isSuccessStatusCode;
 function findLatestDeployment(deployments) {
+    core.info(JSON.stringify(deployments));
     const result = deployments[0];
     return result;
 }

@@ -8,6 +8,7 @@ export function isSuccessStatusCode(statusCode?: number): boolean {
 }
 
 export function findLatestDeployment(deployments: any[]): any {
+  core.info(JSON.stringify(deployments))
   const result = deployments[0];
   return result;
 }
