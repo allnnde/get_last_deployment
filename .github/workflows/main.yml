@@ -32,12 +32,3 @@ jobs:
           github-token: ${{ secrets.github_token }}
           version-file: "package.json"
           skip-on-empty: false
-
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
-        with:
-          tag: ${{ steps.changelog.outputs.tag }}
-          name: ${{ steps.changelog.outputs.tag }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
