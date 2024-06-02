@@ -28922,7 +28922,7 @@ var Inputs;
 })(Inputs || (exports.Inputs = Inputs = {}));
 var Outputs;
 (function (Outputs) {
-    Outputs["DeploymentId"] = "id";
+    Outputs["DeploymentId"] = "deployment_id";
 })(Outputs || (exports.Outputs = Outputs = {}));
 
 

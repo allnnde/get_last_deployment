@@ -6,7 +6,7 @@ export enum Inputs {
 }
 
 export enum Outputs {
-    DeploymentId = 'id'
+    DeploymentId = 'deployment_id'
 }
 
 
