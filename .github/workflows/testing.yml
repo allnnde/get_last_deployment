@@ -20,8 +20,16 @@ jobs:
           environment: testing
 
       - name: Get latest deployment
+        id: get_last_deployment
         uses: ./
         with:
           environment: testing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update deployment status db (success)
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          deployment-id: ${{steps.get_last_deployment.outputs.deployment_id}}
+          state: "success"
