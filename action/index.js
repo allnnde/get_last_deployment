@@ -28918,6 +28918,7 @@ var Inputs;
     Inputs["Owner"] = "owner";
     Inputs["Repo"] = "repo";
     Inputs["Environment"] = "environment";
+    Inputs["State"] = "state";
 })(Inputs || (exports.Inputs = Inputs = {}));
 var Outputs;
 (function (Outputs) {
@@ -28965,7 +28966,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.findLatestDeployment = exports.isSuccessStatusCode = void 0;
+exports.isSuccessStatusCode = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const io_helper_1 = __nccwpck_require__(3262);
@@ -28975,26 +28976,41 @@ function isSuccessStatusCode(statusCode) {
     return statusCode >= 200 && statusCode < 300;
 }
 exports.isSuccessStatusCode = isSuccessStatusCode;
-function findLatestDeployment(deployments) {
-    core.info(JSON.stringify(deployments));
-    const result = deployments[0];
-    return result;
-}
-exports.findLatestDeployment = findLatestDeployment;
 (function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = (0, io_helper_1.getInputs)();
             const github = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
-            core.info(`Start get deployment with:\n  owner: ${inputs.owner}\n  repo: ${inputs.repo}`);
+            core.info(`Start get deployment for ${inputs.owner}/${inputs.repo}}`);
             const deployments = yield github.rest.repos.listDeployments({
                 owner: inputs.owner,
                 repo: inputs.repo,
                 environment: inputs.environment,
             });
             if (isSuccessStatusCode(deployments.status)) {
-                const deploymentsActives = deployments.data;
-                const latestDeployment = findLatestDeployment(deploymentsActives);
+                const allDeployments = deployments.data;
+                core.info(`Finded a ${allDeployments.length} deployment for: ${inputs.owner}/${inputs.repo}`);
+                let latestDeployment = null;
+                const deploymentSorted = allDeployments.toSorted((a, b) => {
+                    return (new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+                });
+                for (const deployment of deploymentSorted) {
+                    const deploymentStatuses = yield github.rest.repos.listDeploymentStatuses({
+                        deployment_id: deployment.id,
+                        owner: inputs.owner,
+                        repo: inputs.repo,
+                    });
+                    const statusSorted = deploymentStatuses.data.toSorted((a, b) => {
+                        return (new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+                    });
+                    if (statusSorted && statusSorted.length > 0) {
+                        const lastStatus = statusSorted[0];
+                        if (lastStatus.state == inputs.state) {
+                            latestDeployment = deployment;
+                            break;
+                        }
+                    }
+                }
                 if (latestDeployment) {
                     (0, io_helper_1.setOutputs)(latestDeployment);
                 }
@@ -29052,14 +29068,12 @@ function getInputs() {
     const result = {
         owner: "",
         repo: "",
-        environment: ""
+        environment: "",
+        state: 'pending'
     };
-    result.owner = core.getInput(constants_1.Inputs.Owner, { required: false });
-    if (!result.owner)
-        result.owner = github_1.context.repo.owner;
-    result.repo = core.getInput(constants_1.Inputs.Repo, { required: false });
-    if (!result.repo)
-        result.repo = github_1.context.repo.repo;
+    result.owner = core.getInput(constants_1.Inputs.Owner, { required: false }) || github_1.context.repo.owner;
+    result.repo = core.getInput(constants_1.Inputs.Repo, { required: false }) || github_1.context.repo.repo;
+    result.state = core.getInput(constants_1.Inputs.State, { required: false }) || 'pending';
     result.environment = core.getInput(constants_1.Inputs.Environment, { required: true });
     return result;
 }
